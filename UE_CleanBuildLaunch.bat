@@ -11,7 +11,7 @@ for /f %%a in ('echo prompt $E^| cmd') do set "ESC=%%a"
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: Banner
-echo %ESC%[0;36mUNREAL ENGINE CBL [Clean, Build, Launch] v1.0%ESC%[0m %ESC%[0;90mAUTHOR x.com @sith_au https://github.com/sithilas/UE-CleanBuildLaunch-bat%ESC%[0m
+echo %ESC%[0;36mUNREAL ENGINE CBL [Clean, Build, Launch] v1.0%ESC%[0m %ESC%[0;90mAUTHOR x.com @sith_au https://github.com/sithilas/UE_CBL_CleanBuildLaunch%ESC%[0m
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
 echo Unreal Engine CBL is a FREE lightweight tool to clean and build your Unreal Engine C++ project with a single click.
 echo This tool only supports Unreal Engine C++ projects using the Epic Games Launcher (binary) version of the engine.
