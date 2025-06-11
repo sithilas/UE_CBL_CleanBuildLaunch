@@ -106,9 +106,9 @@ echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯�
 echo.
 echo This tool will perform the following actions to help you prepare your Unreal Engine C++ project for a clean build.
 echo.
-echo 1. Remove common intermediate and generated folders such as:
+echo 1. Permanently delete generated folders such as:
 echo     - Binaries, Intermediate, Build, Saved, and .vs, Plugin-specific Binaries and Intermediate folders
-echo 2. Delete temporary or auto-generated solution-related files:
+echo 2. Permanently delete generated solution-related files:
 echo     - .sln, .vsconfig
 echo.
 echo Once cleanup is complete, the script will:
