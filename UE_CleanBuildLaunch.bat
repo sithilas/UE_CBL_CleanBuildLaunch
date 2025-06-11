@@ -1,9 +1,8 @@
 @echo OFF
+setlocal enabledelayedexpansion
 
 :: Change the page to UTF-8 for message formatting
 chcp 65001 >nul
-
-setlocal enabledelayedexpansion
 
 :: For message colouring
 for /f %%a in ('echo prompt $E^| cmd') do set "ESC=%%a"
@@ -22,12 +21,11 @@ echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯�
 
 set "UPROJECT_FILE="
 
+:: Add or remove files and folders below
 :: List of top-level folders to delete
 set "FOLDERS_TO_DELETE=Binaries Intermediate Build DerivedDataCache Saved .vs .idea"
-
 :: List of Plugin folders to delete
 set "PLUGIN_FOLDERS_TO_DELETE=Binaries Intermediate"
-
 :: List of top-level files to delete
 set "FILES_TO_DELETE=*.sln *.vsconfig"
 
@@ -43,9 +41,9 @@ for %%F in (*.uproject) do (
 )
 
 if defined UPROJECT_FILE ( 
-    echo ✅ Found .uproject file: %ESC%[0;92m!UPROJECT_FILE!%ESC%[0m
-) else ( 
-    echo ❌ %ESC%[0;91mNo .uproject file found in this folder. Please run this inside a folder that contains a .uproject file.%ESC%[0m
+    echo ✅ Found .uproject file: %ESC%[0;92m!UPROJECT_FILE!%ESC%[0m 
+) else (
+    echo ❌ %ESC%[0;91mMissing .uproject file — run this script in a folder with a valid Unreal project.%ESC%[0m
     goto :END
 )
 
@@ -54,7 +52,7 @@ if defined UPROJECT_FILE (
 :: Read EngineAssociation from .uproject
 for /f "tokens=2 delims=:" %%A in ('findstr "EngineAssociation" "%UPROJECT_FILE%"') do ( 
     set "RAW_ENGINE_VERSION=%%A"
-    )
+)
 
 :: Clean up the value (remove quotes, whitespace, comma)
 set "ENGINE_VERSION=%RAW_ENGINE_VERSION:~2,-2%"
@@ -63,20 +61,22 @@ set "ENGINE_VERSION=%RAW_ENGINE_VERSION:~2,-2%"
 if defined RAW_ENGINE_VERSION (
     echo ✅ Detected Engine version [MAJOR.MINOR]: %ESC%[0;92m%ENGINE_VERSION%%ESC%[0m
 ) else (
-    echo ❌ %ESC%[0;91mFailed to find Engine version in the !UPROJECT_FILE! file.%ESC%[0m
+    echo ❌ %ESC%[0;91mEngine version not found in !UPROJECT_FILE!.%ESC%[0m
     goto :END
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-:: Read the Engine InstalledDirectory value from the registry
+:: Read the engine InstalledDirectory value from the registry
  for /f "tokens=3*" %%A in ('reg query "HKLM\SOFTWARE\EpicGames\Unreal Engine\%ENGINE_VERSION%" /v InstalledDirectory 2^>nul') do (
     set "UNREAL_INS_DIR=%%A %%B"
 )
 
 :: Trim leading spaces
 set "STR=!UNREAL_INS_DIR!"
-for /f "tokens=* delims= " %%A in ("!STR!") do set "STR=%%A"
+for /f "tokens=* delims= " %%A in ("!STR!") do (
+    set "STR=%%A"
+)
 
 :: Trim trailing spaces
 :TrimTrailing
@@ -86,14 +86,14 @@ if "!LASTCHAR!"==" " (
     goto TrimTrailing
 )
 
-:: Trimmed/ clean directory path
+:: Clean directory path
 set "UNREAL_INS_DIR=!STR!"
 
-:: Check if the directory path can be found
+:: Check if the engine directory path can be found
 if defined UNREAL_INS_DIR (
     echo ✅ Unreal Engine %ESC%[0;92m%ENGINE_VERSION%%ESC%[0m install directory found: %ESC%[0;92m!UNREAL_INS_DIR!%ESC%[0m
 ) else (
-    echo ❌ %ESC%[0;91mFailed Unreal Engine %ENGINE_VERSION% install directory.%ESC%[0m
+    echo ❌ %ESC%[0;91mUnreal Engine %ENGINE_VERSION% installation directory not found. Please ensure it is properly installed.%ESC%[0m
     goto :END
 )
 
@@ -111,7 +111,7 @@ echo     - Binaries, Intermediate, Build, Saved, and .vs, Plugin-specific Binari
 echo 2. Delete temporary or auto-generated solution-related files:
 echo     - .sln, .vsconfig
 echo.
-echo This ensures that no stale or conflicting data interferes with the new build. Once cleanup is complete, the script will:
+echo Once cleanup is complete, the script will:
 echo   a. Regenerate project files (.sln)
 echo   b. Build the Development Editor target
 echo   c. Launch the project (optional)
@@ -127,8 +127,9 @@ echo.
 IF %ERRORLEVEL% EQU 1 ( goto BEGINBUILD)
 IF %ERRORLEVEL% EQU 2 ( goto END)
 
-:BEGINBUILD
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+:BEGINBUILD
 
 echo 🔄 Cleaning project top-level folders...
 
@@ -173,6 +174,9 @@ echo.
 echo ✅ Clean successful!
 echo.
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 echo.
 echo 📄 Generating Visual Studio project files...
 echo.
@@ -186,8 +190,8 @@ cmd /c call "!UNREAL_INS_DIR!\Engine\Binaries\DotNet\UnrealBuildTool\UnrealBuild
 IF NOT "%ERRORLEVEL%" == "0" (
     echo.
     echo ❌ %ESC%[0;91mFailed to generate Visual Studio project files.%ESC%[0m
-) 
-else (
+    goto :END
+) else (
     echo.
     echo ✅ Visual Studio project files successfully generated!
 )
@@ -195,6 +199,8 @@ else (
 echo.
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
 echo.
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: Get the .uproject name without extension
 for %%N in ("!UPROJECT_FILE!") do set "UPROJECT_NAME=%%~nN"
@@ -214,7 +220,8 @@ IF NOT "%BUILD_EXIT_CODE%"=="0" (
     goto:END
 ) else ( 
     echo.
-    echo ✅ Build Succeeded!)
+    echo ✅ Build Succeeded!
+)
 
 echo.
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
@@ -222,17 +229,18 @@ echo.
 CHOICE /C YN /M "Do you want to launch !UPROJECT_FILE!"
 echo.
 
-IF %ERRORLEVEL% EQU 1 ( start "" "%UPROJECT_FILE%"
-goto :EOF
+IF %ERRORLEVEL% EQU 1 ( 
+    start "" "%UPROJECT_FILE%"
+    goto :EOF
 )
 IF %ERRORLEVEL% EQU 2 (
     goto :EOF
-    )
+)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :END
 echo.
 echo Press any key to exit...
 pause >nul
 endlocal
-
-
