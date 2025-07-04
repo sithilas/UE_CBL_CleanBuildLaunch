@@ -10,11 +10,13 @@ for /f %%a in ('echo prompt $E^| cmd') do set "ESC=%%a"
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: Banner
-echo %ESC%[0;36mUNREAL ENGINE CBL [Clean, Build, Launch] v1.0%ESC%[0m %ESC%[0;90mAUTHOR x.com @sith_au https://github.com/sithilas/UE_CBL_CleanBuildLaunch%ESC%[0m
+echo %ESC%[0;36mUNREAL ENGINE CBL [Clean, Build, Launch] v1.1%ESC%[0m %ESC%[0;90mhttps://github.com/sithilas/UE_CBL_CleanBuildLaunch%ESC%[0m
+echo %ESC%[0;90mAUTHOR https://www.x.com/sith_au%ESC%[0m
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
 echo Unreal Engine CBL is a FREE lightweight tool to clean and build your Unreal Engine C++ project with a single click.
 echo This tool only supports Unreal Engine C++ projects using the Epic Games Launcher (binary) version of the engine.
-echo ⚠️ %ESC%[0;33mDISCLAIMER: USE AT YOUR OWN RISK — THE AUTHOR IS NOT RESPONSIBLE FOR ANY LOST OR DAMAGED FILES.%ESC%[0m
+echo ⚠️ %ESC%[0;33mDISCLAIMER: USE AT YOUR OWN RISK — THE AUTHOR IS NOT RESPONSIBLE FOR ANY LOST OR DAMAGED FILES.
+echo    PLEASE COMMIT ALL IMPORTANT CHANGES TO SOURCE CONTROL BEFORE RUNNING THIS TOOL.%ESC%[0m
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -46,6 +48,10 @@ if defined UPROJECT_FILE (
     echo ❌ %ESC%[0;91mMissing .uproject file — run this script in a folder with a valid Unreal project.%ESC%[0m
     goto :END
 )
+
+
+:: Get the .uproject name without extension
+for %%N in ("!UPROJECT_FILE!") do set "UPROJECT_NAME=%%~nN"
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -99,6 +105,9 @@ if defined UNREAL_INS_DIR (
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+:: Delay (For readability)
+timeout /t 2 >nul
+
 echo.
 echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
 
@@ -121,6 +130,36 @@ echo 🔹 List of top-level folders to delete: %ESC%[0;33m!FOLDERS_TO_DELETE!%ES
 echo 🔹 List of Plugin folders to delete: %ESC%[0;33m!PLUGIN_FOLDERS_TO_DELETE!%ESC%[0m
 echo 🔹 List of top-level files to delete: %ESC%[0;93m!FILES_TO_DELETE!%ESC%[0m
 echo.
+echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯%ESC%[0m
+echo.
+
+:: Delay (For readability)
+timeout /t 2 >nul
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+:: List plugins in the project
+
+set /a FolderCount=0
+for /D %%F in ("Plugins\*") do (
+    set /a FolderCount+=1
+)
+
+if exist "Plugins" (
+    if !FolderCount! gtr 0 (
+        echo 🔌 Plugins detected in %ESC%[0;33m!UPROJECT_NAME!\Plugins%ESC%[0m. They will be rebuilt with the project.
+        echo.
+        for /D %%D in ("Plugins\*") do (
+            if exist "%%D" (
+                echo    -- %ESC%[0;92m%%~nxD%ESC%[0m
+            )
+        )
+        echo.
+    )
+)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 CHOICE /C YN /M "⚠️ Ready to Clean, Build, and Launch your project"
 echo.
 
@@ -201,9 +240,6 @@ echo %ESC%[0;90m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯�
 echo.
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-:: Get the .uproject name without extension
-for %%N in ("!UPROJECT_FILE!") do set "UPROJECT_NAME=%%~nN"
 
 :: Build project
 
